@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Information System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="main">
+
+    <!-- Left side (like Facebook text) -->
+    <div class="left">
+      <h1 align="center">Student Informaion System</h1>
+    </div>
+
+    <!-- Right side (login card) -->
+    <div class="right">
+
+      <div class="login-box" id="login">
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button onclick="login()">Log In</button>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="login-box" id="dashboard" style="display:none;">
+        <h2>Welcome!</h2>
+        <button onclick="showGrades()">View Grades</button>
+        <button onclick="logout()">Logout</button>
+
+        <div id="grades" style="display:none;">
+          <h3>Grades</h3>
+          <table>
+            <tr><th>Subject</th><th>Grade</th></tr>
+            <tr><td>Math</td><td>90</td></tr>
+            <tr><td>Science</td><td>88</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
