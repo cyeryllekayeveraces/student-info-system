@@ -6,42 +6,40 @@
 </head>
 <body>
 
-  <div class="main">
+<h1>Student Information System</h1>
 
-    <!-- Left side (like Facebook text) -->
-    <div class="left">
-      <h1 align="center">Student Informaion System</h1>
-    </div>
+<div class="form">
+  <input type="text" id="student_id" placeholder="Student ID">
+  <input type="text" id="first_name" placeholder="First Name">
+  <input type="text" id="last_name" placeholder="Last Name">
+  <input type="text" id="gender" placeholder="Gender">
+  <input type="date" id="birthdate">
+  <input type="text" id="address" placeholder="Address">
+  <input type="text" id="contact_number" placeholder="Contact Number">
+  <input type="text" id="course_id" placeholder="Course ID">
+  <input type="text" id="course_name" placeholder="Course Name">
+  <input type="text" id="course_code" placeholder="Course Code">
+  <input type="text" id="enrollment_id" placeholder="Enrollment ID">
 
-    <!-- Right side (login card) -->
-    <div class="right">
+  <button onclick="addStudent()">Save Student</button>
+</div>
 
-      <div class="login-box" id="login">
-        <input type="text" placeholder="Username">
-        <input type="password" placeholder="Password">
-        <button onclick="login()">Log In</button>
-      </div>
+<input type="text" id="search" placeholder="Search by name..." onkeyup="searchStudent()">
 
-      <!-- Dashboard -->
-      <div class="login-box" id="dashboard" style="display:none;">
-        <h2>Welcome!</h2>
-        <button onclick="showGrades()">View Grades</button>
-        <button onclick="logout()">Logout</button>
+<h2>Student List</h2>
 
-        <div id="grades" style="display:none;">
-          <h3>Grades</h3>
-          <table>
-            <tr><th>Subject</th><th>Grade</th></tr>
-            <tr><td>Math</td><td>90</td></tr>
-            <tr><td>Science</td><td>88</td></tr>
-          </table>
-        </div>
-      </div>
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Course</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="studentTable"></tbody>
+</table>
 
-    </div>
-
-  </div>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
