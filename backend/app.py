@@ -1,100 +1,85 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
-app = Flask(_name_)
+app = Flask(__name__)
+CORS(app)
 
-# Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
+# MySQL Connection
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/studentsystem'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Student Model
 class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.String(50), unique=True, nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    age = db.Column(db.Integer)
-    course = db.Column(db.String(100))
-    year_level = db.Column(db.String(20))
+    __tablename__ = 'studentsystem_db'
+
+    student_id = db.Column(db.String(50), primary_key=True)
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
+    gender = db.Column(db.String(30))
+    birthdate = db.Column(db.Date)
+    address = db.Column(db.String(100))
+    contact_number = db.Column(db.String(50))
+    course_id = db.Column(db.String(50))
+    course_name = db.Column(db.String(50))
+    course_code = db.Column(db.String(50))
+    enrollment_id = db.Column(db.String(50))
 
     def to_dict(self):
         return {
-            "id": self.id,
             "student_id": self.student_id,
-            "name": self.name,
-            "age": self.age,
-            "course": self.course,
-            "year_level": self.year_level
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "gender": self.gender,
+            "birthdate": str(self.birthdate),
+            "address": self.address,
+            "contact_number": self.contact_number,
+            "course_id": self.course_id,
+            "course_name": self.course_name,
+            "course_code": self.course_code,
+            "enrollment_id": self.enrollment_id
         }
 
-# Create database
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
-# ------------------ API ROUTES ------------------
-
-# ➤ Add Student
-@app.route('/students', methods=['POST'])
-def add_student():
-    data = request.get_json()
-
-    new_student = Student(
-        student_id=data['student_id'],
-        name=data['name'],
-        age=data.get('age'),
-        course=data.get('course'),
-        year_level=data.get('year_level')
-    )
-
-    db.session.add(new_student)
-    db.session.commit()
-
-    return jsonify({"message": "Student added successfully"}), 201
-
-
-# ➤ Get All Students
+# GET
 @app.route('/students', methods=['GET'])
 def get_students():
     students = Student.query.all()
     return jsonify([s.to_dict() for s in students])
 
-
-# ➤ Get Single Student
-@app.route('/students/<int:id>', methods=['GET'])
-def get_student(id):
-    student = Student.query.get_or_404(id)
-    return jsonify(student.to_dict())
-
-
-# ➤ Update Student
-@app.route('/students/<int:id>', methods=['PUT'])
-def update_student(id):
-    student = Student.query.get_or_404(id)
+# ADD
+@app.route('/students', methods=['POST'])
+def add_student():
     data = request.get_json()
 
-    student.student_id = data.get('student_id', student.student_id)
-    student.name = data.get('name', student.name)
-    student.age = data.get('age', student.age)
-    student.course = data.get('course', student.course)
-    student.year_level = data.get('year_level', student.year_level)
+    student = Student(**data)
+
+    db.session.add(student)
+    db.session.commit()
+
+    return jsonify({"message": "Student added successfully"})
+
+# UPDATE
+@app.route('/students/<string:student_id>', methods=['PUT'])
+def update_student(student_id):
+    student = Student.query.get_or_404(student_id)
+    data = request.get_json()
+
+    for key, value in data.items():
+        setattr(student, key, value)
 
     db.session.commit()
 
     return jsonify({"message": "Student updated successfully"})
 
-
-# ➤ Delete Student
-@app.route('/students/<int:id>', methods=['DELETE'])
-def delete_student(id):
-    student = Student.query.get_or_404(id)
+# DELETE
+@app.route('/students/<string:student_id>', methods=['DELETE'])
+def delete_student(student_id):
+    student = Student.query.get_or_404(student_id)
     db.session.delete(student)
     db.session.commit()
 
-    return jsonify({"message": "Student deleted successfully"})
+    return jsonify({"message": "Deleted successfully"})
 
-
-# Run Server
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
